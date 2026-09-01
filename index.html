@@ -51,22 +51,22 @@
         <div id="the-whole-thing">
             <div class="viewer-row">
                 <div class="viewer-container">
-                    <div class="viewer-header">AAV T62 2 UPWIND 2024</div>
+                    <div class="viewer-header">AAV T62 1 UPWIND 2024</div>
                     <div id="openseadragon1" class="osd-viewer"></div>
                 </div>
                 <div class="viewer-container">
-                    <div class="viewer-header">AAV T62 2 UPWIND 2026</div>
+                    <div class="viewer-header">AAV T62 1 UPWIND 2026</div>
                     <div id="openseadragon2" class="osd-viewer"></div>
                 </div>
             </div>
 
             <div class="viewer-row">
                 <div class="viewer-container">
-                    <div class="viewer-header">AAV T62 2 DOWNWIND 2024</div>
+                    <div class="viewer-header">AAV T62 2 UPWIND 2024</div>
                     <div id="openseadragon3" class="osd-viewer"></div>
                 </div>
                 <div class="viewer-container">
-                    <div class="viewer-header">AAV T62 2 DOWNWIND 2026</div>
+                    <div class="viewer-header">AAV T62 2 UPWIND 2026</div>
                     <div id="openseadragon4" class="osd-viewer"></div>
                 </div>
             </div>
@@ -84,11 +84,11 @@
 
             <div class="viewer-row">
                 <div class="viewer-container">
-                    <div class="viewer-header">AAV T62 2 DOWNWIND 2024</div>
+                    <div class="viewer-header">AAV T62 2 LE 2024</div>
                     <div id="openseadragon7" class="osd-viewer"></div>
                 </div>
                 <div class="viewer-container">
-                    <div class="viewer-header">AAV T62 2 DOWNWIND 2026</div>
+                    <div class="viewer-header">AAV T62 2 LE 2026</div>
                     <div id="openseadragon8" class="osd-viewer"></div>
                 </div>
             </div>
@@ -102,16 +102,16 @@
                 var handlerA = function() {
                     if (isSyncing) return;
                     isSyncing = true;
-                    viewerB.viewport.panTo(viewerA.viewport.getCenter(true), true);
-                    viewerB.viewport.zoomTo(viewerA.viewport.getZoom(true), null, true);
+                    viewerB.viewport.panTo(viewerA.viewport.getCenter(false), false);
+                    viewerB.viewport.zoomTo(viewerA.viewport.getZoom(false), null, false);
                     isSyncing = false;
                 };
 
                 var handlerB = function() {
                     if (isSyncing) return;
                     isSyncing = true;
-                    viewerA.viewport.panTo(viewerB.viewport.getCenter(true), true);
-                    viewerA.viewport.zoomTo(viewerB.viewport.getZoom(true), null, true);
+                    viewerA.viewport.panTo(viewerB.viewport.getCenter(false), false);
+                    viewerA.viewport.zoomTo(viewerB.viewport.getZoom(false), null, false);
                     isSyncing = false;
                 };
 

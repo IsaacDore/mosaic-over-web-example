@@ -4,15 +4,22 @@
         <style>
             html, body {
                 width: 100%;
-                height: 100%;
                 margin: 0;
                 padding: 0;
-                overflow: hidden;
+                /* Allow vertical scrolling while keeping horizontal clean */
+                overflow-x: hidden;
+                overflow-y: auto;
+                background-color: #111;
             }
             #the-whole-thing {
                 display: flex;
+                flex-direction: column;
                 width: 100%;
-                height: 100%;
+            }
+            .viewer-row {
+                display: flex;
+                width: 100%;
+                height: 100vh; /* Each pair takes up full screen height */
             }
             .viewer-container {
                 position: relative;
@@ -20,6 +27,8 @@
                 height: 100%;
                 display: flex;
                 flex-direction: column;
+                border: 10px solid #333; 
+                box-sizing: border-box; 
             }
             .viewer-header {
                 background: #333;
@@ -40,26 +49,136 @@
     </head>
     <body>
         <div id="the-whole-thing">
-            <div class="viewer-container">
-                <div class="viewer-header">AAV T62 2 UPWIND 2024</div>
-                <div id="openseadragon1" class="osd-viewer"></div>
+            <div class="viewer-row">
+                <div class="viewer-container">
+                    <div class="viewer-header">AAV T62 2 UPWIND 2024</div>
+                    <div id="openseadragon1" class="osd-viewer"></div>
+                </div>
+                <div class="viewer-container">
+                    <div class="viewer-header">AAV T62 2 UPWIND 2026</div>
+                    <div id="openseadragon2" class="osd-viewer"></div>
+                </div>
             </div>
-            <div class="viewer-container">
-                <div class="viewer-header">AAV T62 2 UPWIND 2026</div>
-                <div id="openseadragon2" class="osd-viewer"></div>
+
+            <div class="viewer-row">
+                <div class="viewer-container">
+                    <div class="viewer-header">AAV T62 2 DOWNWIND 2024</div>
+                    <div id="openseadragon3" class="osd-viewer"></div>
+                </div>
+                <div class="viewer-container">
+                    <div class="viewer-header">AAV T62 2 DOWNWIND 2026</div>
+                    <div id="openseadragon4" class="osd-viewer"></div>
+                </div>
+            </div>
+
+            <div class="viewer-row">
+                <div class="viewer-container">
+                    <div class="viewer-header">AAV T62 2 DOWNWIND 2024</div>
+                    <div id="openseadragon5" class="osd-viewer"></div>
+                </div>
+                <div class="viewer-container">
+                    <div class="viewer-header">AAV T62 2 DOWNWIND 2026</div>
+                    <div id="openseadragon6" class="osd-viewer"></div>
+                </div>
+            </div>
+
+            <div class="viewer-row">
+                <div class="viewer-container">
+                    <div class="viewer-header">AAV T62 2 DOWNWIND 2024</div>
+                    <div id="openseadragon7" class="osd-viewer"></div>
+                </div>
+                <div class="viewer-container">
+                    <div class="viewer-header">AAV T62 2 DOWNWIND 2026</div>
+                    <div id="openseadragon8" class="osd-viewer"></div>
+                </div>
             </div>
         </div>
+
         <script type="text/javascript">
-            OpenSeadragon({
+            // Bind full two-way synchronization between a pair of viewers
+            function bindViewerPair(viewerA, viewerB) {
+                var isSyncing = false; // This lock is now shared between viewerA and viewerB
+
+                var handlerA = function() {
+                    if (isSyncing) return;
+                    isSyncing = true;
+                    viewerB.viewport.panTo(viewerA.viewport.getCenter(true), true);
+                    viewerB.viewport.zoomTo(viewerA.viewport.getZoom(true), null, true);
+                    isSyncing = false;
+                };
+
+                var handlerB = function() {
+                    if (isSyncing) return;
+                    isSyncing = true;
+                    viewerA.viewport.panTo(viewerB.viewport.getCenter(true), true);
+                    viewerA.viewport.zoomTo(viewerB.viewport.getZoom(true), null, true);
+                    isSyncing = false;
+                };
+
+                viewerA.addHandler('pan', handlerA);
+                viewerA.addHandler('zoom', handlerA);
+
+                viewerB.addHandler('pan', handlerB);
+                viewerB.addHandler('zoom', handlerB);
+            }
+
+            // Initialize Pair 1
+            var viewer1 = OpenSeadragon({
+                id: "openseadragon3",
+                prefixUrl: "openseadragon/images/",
+                tileSources: "2024_AAV62-2UP.dzi"
+            });
+
+            var viewer2 = OpenSeadragon({
+                id: "openseadragon4",
+                prefixUrl: "openseadragon/images/",
+                tileSources: "2026_AAV62-2UP.dzi"
+            });
+
+            bindViewerPair(viewer1, viewer2);
+
+            // Initialize Pair 2
+            var viewer3 = OpenSeadragon({
+                id: "openseadragon5",
+                prefixUrl: "openseadragon/images/",
+                tileSources: "2024_AAV62-2DW.dzi" // Make sure this matches your actual file
+            });
+
+            var viewer4 = OpenSeadragon({
+                id: "openseadragon6",
+                prefixUrl: "openseadragon/images/",
+                tileSources: "2026_AAV62-2DW.dzi" // Make sure this matches your actual file
+            });
+
+            bindViewerPair(viewer3, viewer4);
+
+            var viewer5 = OpenSeadragon({
                 id: "openseadragon1",
                 prefixUrl: "openseadragon/images/",
-                tileSources: "2024AAV62-2UW.dzi"
+                tileSources: "2024_AAV62-1UP.dzi" // Make sure this matches your actual file
             });
-            OpenSeadragon({
+
+            var viewer6 = OpenSeadragon({
                 id: "openseadragon2",
                 prefixUrl: "openseadragon/images/",
-                tileSources: "2026AAV62-2UW.dzi"
+                tileSources: "2026_AAV62-1UP.dzi" // Make sure this matches your actual file
             });
+
+            bindViewerPair(viewer5, viewer6);
+
+            var viewer7 = OpenSeadragon({
+                id: "openseadragon7",
+                prefixUrl: "openseadragon/images/",
+                tileSources: "2024_AAV62-2LE.dzi" // Make sure this matches your actual file
+            });
+
+            var viewer8= OpenSeadragon({
+                id: "openseadragon8",
+                prefixUrl: "openseadragon/images/",
+                tileSources: "2026_AAV62-2LE.dzi" // Make sure this matches your actual file
+            });
+
+            bindViewerPair(viewer7, viewer8);
         </script>
     </body>
 </html>
